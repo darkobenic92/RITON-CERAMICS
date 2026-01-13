@@ -218,3 +218,21 @@
     right: 8px;
   }
 }
+
+.map-container {
+  margin-top: 25px;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 350px;
+  border: 0;
+}
+
