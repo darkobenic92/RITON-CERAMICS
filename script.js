@@ -1,9 +1,3 @@
-document.querySelectorAll('.corner-logo').forEach(logo => {
-  logo.addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
-});
-
 const gallery = document.getElementById("gallery");
 
 if (gallery) {
@@ -11,23 +5,24 @@ if (gallery) {
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
   const caption = document.getElementById("lightboxCaption");
+  const relatedPanel = document.getElementById("relatedPanel");
   const closeBtn = document.querySelector(".close");
   const nextBtn = document.getElementById("next");
   const prevBtn = document.getElementById("prev");
 
   const images = [
-    "Beige white coffe cup.jpg",
+    "Beige white coffee cup.jpg",
     "Beige-white tea cup.jpg",
     "black and white dot coffee cups.jpeg",
     "Brown and beige tea cups.jpg",
     "Brown-white clay tea cups.jpg",
-    "Brown-white coffe cup.jpg",
+    "Brown-white coffee cup.jpg",
     "Brown-white tea cup.jpg",
     "Clay coffee cups palette.jpg",
     "Clay coffee cups.jpg",
     "Clay vases.jpg",
     "Coffee cup brown-white.jpg",
-    "Dalmatian dog coffee cup.jpeg",
+    "Dalmatian dog coffee cup.jpg",
     "Handcrafted clay bottle Casita.png",
     "Rock clay dinner plate.jpg",
     "Rock clay plate.jpg",
@@ -35,11 +30,11 @@ if (gallery) {
     "Stone desert plate.jpg",
     "Terra handcrafted clay bottle.png",
     "white coffee cup.jpg",
-    "White-black coffee cups.jpeg",
     "White-brown clay tea cup.jpg"
   ];
 
   let currentIndex = 0;
+  let currentImage = "";
 
   images.forEach((img, index) => {
     const li = document.createElement("li");
@@ -47,12 +42,9 @@ if (gallery) {
 
     image.src = `media/thumbs/${img}`;
     image.alt = img;
-    image.loading = "lazy";
 
     image.addEventListener("load", () => {
-      setTimeout(() => {
-        image.classList.add("pop-in");
-      }, index * 60);
+      setTimeout(() => image.classList.add("pop-in"), index * 60);
     });
 
     image.addEventListener("click", () => openLightbox(index));
@@ -63,46 +55,84 @@ if (gallery) {
 
   function openLightbox(index) {
     currentIndex = index;
+    currentImage = images[currentIndex];
     lightbox.style.display = "flex";
-    showImage();
+    showImage(currentImage);
+    loadSidebarImages();
   }
 
-  function showImage() {
-    lightboxImg.src = `media/full/${images[currentIndex]}`;
-    caption.textContent = images[currentIndex];
+  function showImage(file) {
+    currentImage = file;
+    lightboxImg.src = `media/full/${file}`;
+    caption.textContent = file;
+    highlightActiveThumb();
   }
 
-  closeBtn.addEventListener("click", () => {
-    lightbox.style.display = "none";
-  });
+  function loadSidebarImages() {
+    relatedPanel.innerHTML = "";
 
-  nextBtn.addEventListener("click", () => {
+    const mainImage = images[currentIndex];
+
+    addSidebarThumb(mainImage);
+
+    const base = mainImage.replace(/\.(jpg|jpeg|png)$/i, "");
+
+    const possible = [
+      `${base} 1.jpg`, `${base} 1.png`,
+      `${base} 2.jpg`, `${base} 2.png`,
+      `${base} 3.jpg`, `${base} 3.png`,
+      `${base} 1.jpeg`, `${base} 2.jpeg`, `${base} 3.jpeg`
+    ];
+
+    possible.forEach(name => {
+      const testImg = new Image();
+      testImg.src = `media/full/${name}`;
+
+      testImg.onload = () => addSidebarThumb(name);
+    });
+  }
+
+  function addSidebarThumb(file) {
+    const thumb = document.createElement("img");
+    thumb.src = `media/full/${file}`;
+    thumb.dataset.file = file;
+
+    thumb.addEventListener("click", () => showImage(file));
+
+    relatedPanel.appendChild(thumb);
+    highlightActiveThumb();
+  }
+
+  function highlightActiveThumb() {
+    document.querySelectorAll(".related-panel img").forEach(img => {
+      img.classList.toggle("active", img.dataset.file === currentImage);
+    });
+  }
+
+  function nextProduct() {
     currentIndex = (currentIndex + 1) % images.length;
-    showImage();
-  });
+    currentImage = images[currentIndex];
+    showImage(currentImage);
+    loadSidebarImages();
+  }
 
-  prevBtn.addEventListener("click", () => {
+  function prevProduct() {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
-    showImage();
-  });
+    currentImage = images[currentIndex];
+    showImage(currentImage);
+    loadSidebarImages();
+  }
 
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) {
-      lightbox.style.display = "none";
-    }
-  });
+  closeBtn.addEventListener("click", () => lightbox.style.display = "none");
+
+  nextBtn.addEventListener("click", nextProduct);
+  prevBtn.addEventListener("click", prevProduct);
 
   document.addEventListener("keydown", (e) => {
     if (lightbox.style.display === "flex") {
-      if (e.key === "ArrowRight") {
-        currentIndex = (currentIndex + 1) % images.length;
-        showImage();
-      } else if (e.key === "ArrowLeft") {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        showImage();
-      } else if (e.key === "Escape") {
-        lightbox.style.display = "none";
-      }
+      if (e.key === "ArrowRight") nextProduct();
+      else if (e.key === "ArrowLeft") prevProduct();
+      else if (e.key === "Escape") lightbox.style.display = "none";
     }
   });
 
