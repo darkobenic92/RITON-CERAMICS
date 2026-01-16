@@ -64,7 +64,6 @@ if (gallery) {
   function showImage(file) {
     currentImage = file;
     lightboxImg.src = `media/full/${file}`;
-    caption.textContent = file;
     highlightActiveThumb();
   }
 
@@ -77,12 +76,10 @@ if (gallery) {
 
     const base = mainImage.replace(/\.(jpg|jpeg|png)$/i, "");
 
-    const possible = [
-      `${base} 1.jpg`, `${base} 1.png`,
-      `${base} 2.jpg`, `${base} 2.png`,
-      `${base} 3.jpg`, `${base} 3.png`,
-      `${base} 1.jpeg`, `${base} 2.jpeg`, `${base} 3.jpeg`
-    ];
+    const possible = [1,2,3].flatMap(n =>
+     ["jpg","png","jpeg"].map(ext => `${base} ${n}.${ext}`)
+   );
+
 
     possible.forEach(name => {
       const testImg = new Image();
@@ -123,7 +120,11 @@ if (gallery) {
     loadSidebarImages();
   }
 
-  closeBtn.addEventListener("click", () => lightbox.style.display = "none");
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+     lightbox.style.display = "none";
+  }
+  });
 
   nextBtn.addEventListener("click", nextProduct);
   prevBtn.addEventListener("click", prevProduct);
