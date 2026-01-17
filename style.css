@@ -290,3 +290,14 @@ body {
     gap: 20px;
   }
 }
+@media (max-width: 500px) {
+  .corner-logo.left,
+  .corner-logo.right {
+    width: 40px; 
+    top: 8px;    
+  }
+
+  .header {
+    padding: 10px 15px;
+  }
+}
