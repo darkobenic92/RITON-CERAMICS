@@ -286,7 +286,7 @@ body {
   .photo-list { grid-template-columns: 1fr; }
 
   .social-links {
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
   }
 }
