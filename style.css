@@ -287,7 +287,7 @@ body {
 
   .social-links {
     flex-direction: row;
-    gap: 20px;
+    gap: 10px;
   }
 }
 @media (max-width: 500px) {
