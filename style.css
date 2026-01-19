@@ -183,15 +183,6 @@ body {
 }
 
 
-.close {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 40px;
-  color: white;
-  cursor: pointer;
-}
-
 .arrow {
   position: absolute;
   top: 50%;

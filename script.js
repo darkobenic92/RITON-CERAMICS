@@ -6,7 +6,6 @@ if (gallery) {
   const lightboxImg = document.getElementById("lightboxImg");
   const caption = document.getElementById("lightboxCaption");
   const relatedPanel = document.getElementById("relatedPanel");
-  const closeBtn = document.querySelector(".close");
   const nextBtn = document.getElementById("next");
   const prevBtn = document.getElementById("prev");
 
